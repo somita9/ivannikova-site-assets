@@ -28,9 +28,9 @@
       if (htmlList) listBox.innerHTML = htmlList;
     }
 
-    // главная страница: карусель из последних 8 постов, карточки <h3>, без класса у ссылки
+    // главная страница: карусель из ВСЕХ постов (пролистывается до конца), карточки <h3>, без класса у ссылки
     if (gridBox) {
-      var htmlGrid = items.slice(0, 8).map(function(it){
+      var htmlGrid = items.map(function(it){
         var path = pathOf(it.link), dateStr = dateOf(it.date);
         return '<article><img src="' + IMG + '" alt="" width="800" height="1067" loading="lazy" decoding="async">' +
           '<div><span>' + dateStr + '</span><h3>' + esc(it.title) + '</h3>' +
