@@ -40,3 +40,40 @@
     }
   }).catch(function(){});
 })();
+
+// ---- персональные данные: оператор — лично Иванникова О.Н., а не бюро ----
+(function(){
+  // страница /privacy: правим раздел «1. Оператор» и раздел «10. Контакты»
+  if (location.pathname === '/privacy') {
+    var paras = document.querySelectorAll('.policy-page p');
+    for (var i = 0; i < paras.length; i++) {
+      var p = paras[i];
+      if (p.textContent.indexOf('Оператором персональных данных является Адвокатское бюро') === 0) {
+        p.innerHTML = 'Оператором персональных данных является адвокат Иванникова Ольга Николаевна, ' +
+          'реестровый номер в реестре адвокатов Свердловской области — 66/2906. ' +
+          'Адрес для корреспонденции: 620075, г. Екатеринбург, проспект Ленина, 24/8, офис 615. ' +
+          'Электронная почта: advokat-ion@mail.ru. Телефон: +7 912 634-61-65.';
+        // следующий абзац («Обращения по вопросам... также принимает адвокат Иванникова»)
+        // теперь дублирует эту же информацию — убираем его
+        var next = p.nextElementSibling;
+        if (next && next.tagName === 'P' && next.textContent.indexOf('Обращения по вопросам юридической помощи') === 0) {
+          next.remove();
+        }
+      }
+      if (p.textContent.indexOf('По вопросам обработки персональных данных: lawyersburo@gmail.com') === 0) {
+        p.innerHTML = 'По вопросам обработки персональных данных: advokat-ion@mail.ru, +7 912 634-61-65.';
+      }
+    }
+  }
+
+  // на всех страницах: чекбокс согласия в форме — ссылка на отдельную страницу «Согласие»
+  var links = document.querySelectorAll('label.consent a[href="/privacy"]');
+  for (var j = 0; j < links.length; j++) {
+    var span = links[j].closest('span') || links[j].parentElement;
+    if (span) {
+      span.innerHTML = 'Даю согласие на обработку персональных данных на условиях, изложенных в ' +
+        '<a href="/soglasie" target="_blank" rel="noreferrer">Согласии на обработку персональных данных</a> и ' +
+        '<a href="/privacy" target="_blank" rel="noreferrer">Политике обработки персональных данных</a>.';
+    }
+  }
+})();
