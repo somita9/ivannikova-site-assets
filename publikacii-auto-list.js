@@ -63,6 +63,16 @@
       if (p.textContent.indexOf('По вопросам обработки персональных данных: lawyersburo@gmail.com') === 0) {
         p.innerHTML = 'По вопросам обработки персональных данных: advokat-ion@mail.ru, +7 912 634-61-65.';
       }
+      if (p.textContent.indexOf('Данные из нативных форм сайта передаются средствами платформы Tilda') === 0 &&
+          !document.querySelector('.iv-cdn-disclosure')) {
+        var note = document.createElement('p');
+        note.className = 'iv-cdn-disclosure';
+        note.innerHTML = 'Список публикаций на странице /publikacii дополнительно загружает вспомогательный ' +
+          'скрипт отображения карточек с внешнего сервиса jsDelivr (CDN, технически связан с GitHub). ' +
+          'Этот сервис отдаёт только статический файл кода и не получает, не обрабатывает и не хранит ' +
+          'персональные данные посетителей сайта.';
+        p.parentNode.insertBefore(note, p.nextSibling);
+      }
     }
   }
 
