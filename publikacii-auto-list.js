@@ -86,4 +86,45 @@
         '<a href="/privacy" target="_blank" rel="noreferrer">Политике обработки персональных данных</a>.';
     }
   }
+
+  // главная: убираем из блока отзывов конкретный псевдоним и текст отзыва,
+  // оставляем только сводный рейтинг — публикация чужого текста требует отдельного согласия автора
+  var feed = document.querySelector('.review-feed');
+  if (feed) {
+    var author = feed.querySelector('.review-author');
+    if (author) {
+      var quote = author.nextElementSibling;
+      if (quote && quote.tagName === 'P') quote.remove();
+      author.remove();
+      var b = feed.querySelector('b');
+      if (b) {
+        var countNote = document.createElement('p');
+        countNote.textContent = '188 оценок, 157+ отзывов клиентов';
+        b.parentNode.insertBefore(countNote, b.nextSibling);
+      }
+    }
+  }
+
+  // на всех страницах статей: чиним разметку Article — mainEntityOfPage, publisher.url, author.url
+  var ldScripts = document.querySelectorAll('script[type="application/ld+json"]');
+  for (var k = 0; k < ldScripts.length; k++) {
+    var s = ldScripts[k];
+    try {
+      var data = JSON.parse(s.textContent);
+      if (data && data['@type'] === 'Article') {
+        var canonicalEl = document.querySelector('link[rel="canonical"]');
+        var fullUrl = canonicalEl ? canonicalEl.href : location.href;
+        data.mainEntityOfPage = fullUrl;
+        data.url = fullUrl;
+        if (data.publisher && typeof data.publisher === 'object') {
+          data.publisher.url = 'https://xn-----6kcabhcpormaugc7bk8ee2l.xn--p1ai/';
+        }
+        if (data.author && typeof data.author === 'object' && data.author.url &&
+            data.author.url.charAt(0) === '/') {
+          data.author.url = 'https://xn-----6kcabhcpormaugc7bk8ee2l.xn--p1ai' + data.author.url;
+        }
+        s.textContent = JSON.stringify(data);
+      }
+    } catch (e) {}
+  }
 })();
