@@ -128,3 +128,29 @@
     } catch (e) {}
   }
 })();
+
+// ---- главная: обогащение LegalService (рейтинг, ссылки на профили, фото) ----
+(function(){
+  if (location.pathname !== '/') return;
+  var scripts = document.querySelectorAll('script[type="application/ld+json"]');
+  for (var i = 0; i < scripts.length; i++) {
+    var s = scripts[i];
+    try {
+      var data = JSON.parse(s.textContent);
+      if (data && data['@type'] === 'LegalService') {
+        data.url = 'https://xn-----6kcabhcpormaugc7bk8ee2l.xn--p1ai/';
+        data.image = 'https://static.tildacdn.com/tild6334-6537-4237-b731-383663353435/ivannikova-dsc-5276.jpg';
+        data.sameAs = [
+          'https://yandex.ru/maps/org/advokatskoye_byuro_zashchitnik/210516705456/',
+          'https://2gis.ru/ekaterinburg/firm/70000001059777135'
+        ];
+        data.aggregateRating = {
+          '@type': 'AggregateRating',
+          'ratingValue': '5.0',
+          'reviewCount': '188'
+        };
+        s.textContent = JSON.stringify(data);
+      }
+    } catch (e) {}
+  }
+})();
